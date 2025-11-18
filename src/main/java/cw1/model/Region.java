@@ -2,6 +2,7 @@ package cw1.model;
 
 import cw1.exception.InvalidDataException;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -10,11 +11,10 @@ import java.util.Objects;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class Region {
     private String name;
     private List<Position> vertices = new ArrayList<>();
-
-    public Region() {}
 
     public Region(String name, List<Position> vertices) {
         this.name = name;

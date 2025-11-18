@@ -2,17 +2,17 @@ package cw1.model;
 
 import cw1.exception.InvalidDataException;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Position {
     private Double lng;
     private Double lat;
-
-    public Position() {}
 
     public Position(Double lng, Double lat) {
         this.lng = lng;
