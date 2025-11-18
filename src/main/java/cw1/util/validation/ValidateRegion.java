@@ -26,9 +26,6 @@ public final class ValidateRegion {
             throw new InvalidDataException("region must have at least 3 sides to be an area");
         }
 
-        for (Position v : vertices) {
-            ValidatePosition.validatePosition(v, "position");
-        }
 
 
         // first position must equal last for the region to be a valid region

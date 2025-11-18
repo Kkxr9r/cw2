@@ -7,7 +7,6 @@ import cw1.util.geometry.DistanceTo;
 import cw1.util.geometry.IsCloseTo;
 import cw1.util.geometry.IsInRegion;
 import cw1.util.geometry.NextPosition;
-import cw1.util.validation.ValidateAngle;
 import cw1.util.validation.ValidateRegion;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public Position nextPosition(Position start, Double degrees) {
-        ValidateAngle.validateAngle(degrees);
         return NextPosition.NextPosition(start, degrees);
     }
 
