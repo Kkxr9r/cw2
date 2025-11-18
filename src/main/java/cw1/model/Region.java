@@ -19,29 +19,33 @@ public class Region {
     public Region(String name, List<Position> vertices) {
         this.name = name;
         this.vertices = vertices;
-        validateRegion();
+        validateRegion(this);
     }
 
-    public void validateRegion(){
+    public static void validateRegion(Region region){
 
-        if (name == null) {
+        if (Objects.isNull(region)){
+            throw new InvalidDataException("region must be provided");
+        }
+
+        if (region.name == null) {
             throw new InvalidDataException("region.name must be provided");
         }
         // size ≥ 4 (closed polygon minimal)
-        if (vertices.size() < 4) {
+        if (region.vertices.size() < 4) {
             throw new InvalidDataException("region must have at least 3 sides to be an area");
         }
 
         // first position must equal last for the region to be a valid region
-        Position first = vertices.getFirst();
-        Position last  = vertices.getLast();
+        Position first = region.vertices.getFirst();
+        Position last  = region.vertices.getLast();
         boolean closed = first.getLng().equals(last.getLng()) && first.getLat().equals(last.getLat());
         if (!closed) {
             throw new InvalidDataException("region is not closed (first vertex must equal last), not a valid region");
         }
 
         // validates each of the vertices
-        for (Position p : vertices) {
+        for (Position p : region.vertices) {
             Position.validatePosition(p);
         }
     }

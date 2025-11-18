@@ -1,6 +1,7 @@
 package cw1.service;
 
 
+import cw1.exception.InvalidDataException;
 import cw1.model.Position;
 import cw1.model.Region;
 import cw1.util.geometry.DistanceTo;
@@ -29,13 +30,16 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public Position nextPosition(Position start, Double degrees) {
         Position.validatePosition(start);
+        if (degrees == null) {
+            throw new InvalidDataException("angle must be provided");
+        }
         return NextPosition.NextPosition(start, degrees);
     }
 
     @Override
     public boolean isInRegion(Position point, Region region) {
         Position.validatePosition(point);
-        region.validateRegion();
+        Region.validateRegion(region);
         return IsInRegion.isInRegion(point, region);
     }
 }
