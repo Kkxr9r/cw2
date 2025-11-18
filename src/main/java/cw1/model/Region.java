@@ -19,17 +19,10 @@ public class Region {
     public Region(String name, List<Position> vertices) {
         this.name = name;
         this.vertices = vertices;
-        validateRegion(this);
+        validateRegion();
     }
 
-    public static void validateRegion(Region r){
-
-        if (r == null) {
-            throw new InvalidDataException("region must be provided");
-        }
-
-        String name = r.getName();
-        List<Position> vertices = r.getVertices();
+    public void validateRegion(){
 
         if (name == null) {
             throw new InvalidDataException("region.name must be provided");
@@ -49,7 +42,7 @@ public class Region {
 
         // validates each of the vertices
         for (Position p : vertices) {
-            p.validatePosition();
+            Position.validatePosition(p);
         }
     }
 

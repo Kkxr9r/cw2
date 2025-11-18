@@ -17,21 +17,24 @@ public class Position {
     public Position(Double lng, Double lat) {
         this.lng = lng;
         this.lat = lat;
-        this.validatePosition();
+        validatePosition(this);
     }
 
 
-    public void validatePosition() {
-        if (lng == null) {
+    public static void validatePosition(Position position) {
+        if (Objects.isNull(position)) {
+            throw new InvalidDataException("position must be provided.");
+        }
+        if (position.lng == null) {
             throw new InvalidDataException("position.lng must be provided");
         }
-        if (lat == null) {
+        if (position.lat == null) {
             throw new InvalidDataException("position.lat must be provided");
         }
-        if (Double.isNaN(lng) || Double.isInfinite(lng)) {
+        if (Double.isNaN(position.lng) || Double.isInfinite(position.lng)) {
             throw new InvalidDataException("position.lng must be a finite number");
         }
-        if (Double.isNaN(lat) || Double.isInfinite(lat)) {
+        if (Double.isNaN(position.lat) || Double.isInfinite(position.lat)) {
             throw new InvalidDataException("position.lat must be a finite number");
         }
     }
