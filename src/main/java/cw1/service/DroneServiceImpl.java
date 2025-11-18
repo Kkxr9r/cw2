@@ -14,6 +14,8 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public double calculateDistance(Position p1, Position p2) {
+        p1.validatePosition();
+        p2.validatePosition();
         return DistanceTo.distanceTo(p1, p2);
     }
 
