@@ -7,7 +7,6 @@ import cw1.util.geometry.DistanceTo;
 import cw1.util.geometry.IsCloseTo;
 import cw1.util.geometry.IsInRegion;
 import cw1.util.geometry.NextPosition;
-import cw1.util.validation.ValidateRegion;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,7 +29,6 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public boolean isInRegion(Position point, Region region) {
-        ValidateRegion.validateRegion(region);
         return IsInRegion.isInRegion(point, region);
     }
 }

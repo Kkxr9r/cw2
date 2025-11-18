@@ -17,11 +17,11 @@ public class Position {
     public Position(Double lng, Double lat) {
         this.lng = lng;
         this.lat = lat;
-        this.validate();
+        this.validatePosition();
     }
 
 
-    public void validate() {
+    public void validatePosition() {
         if (lng == null) {
             throw new InvalidDataException("position.lng must be provided");
         }
