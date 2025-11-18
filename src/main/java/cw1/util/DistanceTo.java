@@ -1,4 +1,4 @@
-package cw1.util.geometry;
+package cw1.util;
 
 import cw1.model.Position;
 

@@ -4,10 +4,10 @@ package cw1.service;
 import cw1.exception.InvalidDataException;
 import cw1.model.Position;
 import cw1.model.Region;
-import cw1.util.geometry.DistanceTo;
-import cw1.util.geometry.IsCloseTo;
-import cw1.util.geometry.IsInRegion;
-import cw1.util.geometry.NextPosition;
+import cw1.util.DistanceTo;
+import cw1.util.IsCloseTo;
+import cw1.util.IsInRegion;
+import cw1.util.NextPosition;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,8 +1,7 @@
-package cw1.util.geometry;
+package cw1.util;
 
 import cw1.model.Position;
 import cw1.model.Region;
-import cw1.util.geometry.NextPosition;
 
 import java.util.List;
 
