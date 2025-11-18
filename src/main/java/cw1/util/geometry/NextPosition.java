@@ -30,26 +30,4 @@ public class NextPosition {
         double dy = Math.sin(rad) * stepSize; // lat
         return new Position(start.getLng() + dx, start.getLat() + dy);
     }
-
-    // this one is for isInRegion, but can be used instead as well if you don't have an angle
-    static Position NextPosition(Position start, Position end) {
-        double stepSize = step_size;
-        double dx = end.getLng() - start.getLng();
-        double dy = end.getLat() - start.getLat();
-
-        double dist = DistanceTo.distanceTo(start, end);
-
-        // avoid division by 0 if dist = 0, and moving beyond the end point
-        if (dist < stepSize) {
-            return new Position(end.getLng(), end.getLat());
-        }
-
-        double ux = dx / dist;
-        double uy = dy / dist;
-
-        double newLng = start.getLng() + ux * stepSize;
-        double newLat = start.getLat() + uy * stepSize;
-
-        return new Position(newLng, newLat);
-    }
 }
