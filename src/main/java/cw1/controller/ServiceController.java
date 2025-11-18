@@ -51,6 +51,7 @@ public class ServiceController {
 
     @PostMapping("/distanceTo")
     public Double distanceTo(@RequestBody DistanceToRequest distanceToRequest) {
+
         return droneService.calculateDistance(distanceToRequest.getPosition1(), distanceToRequest.getPosition2());
     }
 

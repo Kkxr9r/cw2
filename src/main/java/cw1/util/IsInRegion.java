@@ -1,20 +1,43 @@
-package cw1.util.geometry;
+package cw1.util;
 
 import cw1.model.Position;
 import cw1.model.Region;
-import cw1.util.geometry.NextPosition;
 
 import java.util.List;
 
+import static cw1.service.Constants.step_size;
+
 
 public class IsInRegion {
+
+    // helper function for isOnLine
+    private static Position nextPosition(Position start, Position end) {
+        double stepSize = step_size;
+        double dx = end.getLng() - start.getLng();
+        double dy = end.getLat() - start.getLat();
+
+        double dist = DistanceTo.distanceTo(start, end);
+
+        // avoid division by 0 if dist = 0, and moving beyond the end point
+        if (dist < stepSize) {
+            return new Position(end.getLng(), end.getLat());
+        }
+
+        double ux = dx / dist;
+        double uy = dy / dist;
+
+        double newLng = start.getLng() + ux * stepSize;
+        double newLat = start.getLat() + uy * stepSize;
+
+        return new Position(newLng, newLat);
+    }
 
     // helper function for isOnBoundry, determines if a particular point is on a side/line
     private static Boolean isOnLine(Position target, Position start, Position end) {
         Position current = start;
         do {
             if (IsCloseTo.isCloseTo(target, current)) { return true; }
-            current = NextPosition.NextPosition(current, end);
+            current = nextPosition(current, end);
 
         } while (!current.equals(end));
         // one last check to see if target isCloseTo end

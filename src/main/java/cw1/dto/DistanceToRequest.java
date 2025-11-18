@@ -1,4 +1,6 @@
-package cw1.dto;import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+package cw1.dto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import cw1.model.Position;
 import lombok.Getter;
