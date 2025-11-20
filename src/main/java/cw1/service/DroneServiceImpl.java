@@ -56,6 +56,7 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public List<String> dronesWithCooling(boolean state) {
+        droneList1.setDrones();
         return droneList1.getAllDrones().stream()
                 .filter(drone -> state
                         ? drone.getCapability().isCooling()
