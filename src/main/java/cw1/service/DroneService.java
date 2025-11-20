@@ -1,6 +1,7 @@
 package cw1.service;
 
 
+import cw1.model.Drone;
 import cw1.model.DroneList;
 import cw1.model.Position;
 import cw1.model.Region;
@@ -14,4 +15,5 @@ public interface DroneService {
     Position nextPosition(Position start, Double angleDegrees);
     boolean isInRegion(Position point, Region region);
     public List<String> dronesWithCooling (boolean state);
+    public Drone getDrone (String id);
 }

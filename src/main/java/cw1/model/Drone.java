@@ -10,5 +10,4 @@ public class Drone {
     private String name;
     private String id;
     private DroneCapability capability;
-
 }

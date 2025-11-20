@@ -80,8 +80,8 @@ public class ServiceController {
         return droneService.dronesWithCooling(state);
     }
 
-//    @GetMapping("/droneDetails/{id}")
-//    public List<String> droneDetails(@PathVariable String id) {
-//        return droneService.dronesWithCooling(state);
-//    }
+    @GetMapping("/droneDetails/{id}")
+    public Drone droneDetails(@PathVariable String id) {
+        return droneService.getDrone(id);
+    }
 }

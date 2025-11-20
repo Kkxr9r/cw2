@@ -2,6 +2,7 @@ package cw1.service;
 
 
 import cw1.exception.InvalidDataException;
+import cw1.exception.NotFoundException;
 import cw1.model.Drone;
 import cw1.model.DroneList;
 import cw1.model.Position;
@@ -64,6 +65,14 @@ public class DroneServiceImpl implements DroneService {
                 )
                 .map(Drone::getId)
                 .toList();
+    }
+
+    @Override
+    public Drone getDrone (String id) {
+        droneList1.setDrones();
+        return droneList1.getAllDrones().stream()
+                .filter(drone -> id.equals(drone.getId())).findFirst()
+                .orElseThrow(() -> new NotFoundException("drone with id " + id + " not found"));
     }
 
 }
