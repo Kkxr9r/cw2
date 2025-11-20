@@ -75,4 +75,25 @@ public class DroneServiceImpl implements DroneService {
                 .orElseThrow(() -> new NotFoundException("drone with id " + id + " not found"));
     }
 
+    @Override
+    public List<String> queryAsPath(String attributeName, String attributeValue) {
+        droneList1.setDrones();
+        return droneList1.getAllDrones().stream().filter(drone -> {
+                    return switch (attributeName) {
+                        // added these as well just in case they wanted to do it the complicated way
+                        case "id" -> drone.getId().equals(attributeValue);
+                        case "cooling" -> Boolean.toString(drone.getCapability().isCooling()).equals(attributeValue);
+                        case "heating" -> Boolean.toString(drone.getCapability().isHeating()).equals(attributeValue);
+
+                        case "capacity" -> Double.toString(drone.getCapability().getCapacity()).equals(attributeValue);
+                        case "maxMoves" -> Integer.toString(drone.getCapability().getMaxMoves()).equals(attributeValue);
+                        case "costPerMove" ->  Double.toString(drone.getCapability().getCostPerMove()).equals(attributeValue);
+                        case "costInitial" -> Double.toString(drone.getCapability().getCostInitial()).equals(attributeValue);
+                        case "costFinal" -> Double.toString(drone.getCapability().getCostFinal()).equals(attributeValue);
+
+                        default -> false;
+                    };
+                }).map(Drone::getId).toList();
+    }
+
 }

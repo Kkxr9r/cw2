@@ -84,4 +84,10 @@ public class ServiceController {
     public Drone droneDetails(@PathVariable String id) {
         return droneService.getDrone(id);
     }
+
+    @GetMapping("/queryAsPath/{attributeName}/{attributeValue}")
+    public List<String> queryAsPath(@PathVariable String attributeName, @PathVariable String attributeValue) {
+        return droneService.queryAsPath(attributeName, attributeValue);
+    }
+
 }

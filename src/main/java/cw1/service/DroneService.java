@@ -16,4 +16,5 @@ public interface DroneService {
     boolean isInRegion(Position point, Region region);
     public List<String> dronesWithCooling (boolean state);
     public Drone getDrone (String id);
+    public List<String> queryAsPath(String attributeName, String attributeValue);
 }
