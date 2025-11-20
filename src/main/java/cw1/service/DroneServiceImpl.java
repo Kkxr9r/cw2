@@ -2,6 +2,8 @@ package cw1.service;
 
 
 import cw1.exception.InvalidDataException;
+import cw1.model.Drone;
+import cw1.model.DroneList;
 import cw1.model.Position;
 import cw1.model.Region;
 import cw1.util.DistanceTo;
@@ -9,9 +11,18 @@ import cw1.util.IsCloseTo;
 import cw1.util.IsInRegion;
 import cw1.util.NextPosition;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Service
 public class DroneServiceImpl implements DroneService {
+
+    private final DroneList droneList1;
+
+    public DroneServiceImpl(DroneList droneList1) {
+        this.droneList1 = droneList1;
+    }
 
     @Override
     public double calculateDistance(Position p1, Position p2) {
@@ -42,4 +53,16 @@ public class DroneServiceImpl implements DroneService {
         Region.validateRegion(region);
         return IsInRegion.isInRegion(point, region);
     }
+
+    @Override
+    public List<String> dronesWithCooling(boolean state) {
+        return droneList1.getAllDrones().stream()
+                .filter(drone -> state
+                        ? drone.getCapability().isCooling()
+                        : drone.getCapability().isHeating()
+                )
+                .map(Drone::getId)
+                .toList();
+    }
+
 }

@@ -4,6 +4,8 @@ import cw1.dto.DistanceToRequest;
 import cw1.dto.IsCloseToRequest;
 import cw1.dto.IsInRegionRequest;
 import cw1.dto.NextPositionRequest;
+import cw1.model.Drone;
+import cw1.model.DroneList;
 import cw1.model.Position;
 import cw1.service.DroneService;
 
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
+import java.util.List;
 
 /**
  * Controller class that handles various HTTP endpoints for the application.
@@ -69,4 +72,16 @@ public class ServiceController {
     public boolean isInRegion(@RequestBody IsInRegionRequest isInRegionRequest) {
         return droneService.isInRegion(isInRegionRequest.getPosition(), isInRegionRequest.getRegion());
     }
+
+    // cw 2
+
+    @GetMapping("/dronesWithCooling/{state}")
+    public List<String> dronesWithCooling(@PathVariable boolean state) {
+        return droneService.dronesWithCooling(state);
+    }
+
+//    @GetMapping("/droneDetails/{id}")
+//    public List<String> droneDetails(@PathVariable String id) {
+//        return droneService.dronesWithCooling(state);
+//    }
 }
