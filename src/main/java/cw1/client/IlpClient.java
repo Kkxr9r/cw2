@@ -1,8 +1,10 @@
 package cw1.client;
 import cw1.model.Drone;
+import cw1.model.ServicePointAvailability;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +23,12 @@ public class IlpClient {
         String url = ilpBaseUrl + "/drones";
         Drone[] drones = restTemplate.getForObject(url, Drone[].class);
         return drones == null ? List.of() : Arrays.asList(drones);
+    }
+
+    public List<ServicePointAvailability> fetchServicePointAvailability() {
+        String url = ilpBaseUrl + "/drones-for-service-points";
+        ServicePointAvailability[] availabilities = restTemplate.getForObject(url, ServicePointAvailability[].class);
+        return availabilities == null ? List.of() : Arrays.asList(availabilities);
     }
 
 

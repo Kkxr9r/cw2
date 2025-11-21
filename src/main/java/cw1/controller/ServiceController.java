@@ -1,11 +1,7 @@
 package cw1.controller;
 
-import cw1.dto.DistanceToRequest;
-import cw1.dto.IsCloseToRequest;
-import cw1.dto.IsInRegionRequest;
-import cw1.dto.NextPositionRequest;
+import cw1.dto.*;
 import cw1.model.Drone;
-import cw1.model.DroneList;
 import cw1.model.Position;
 import cw1.service.DroneService;
 
@@ -88,6 +84,11 @@ public class ServiceController {
     @GetMapping("/queryAsPath/{attributeName}/{attributeValue}")
     public List<String> queryAsPath(@PathVariable String attributeName, @PathVariable String attributeValue) {
         return droneService.queryAsPath(attributeName, attributeValue);
+    }
+
+    @PostMapping("/queryAvailableDrones")
+    public List<String> queryAvailableDrones(@RequestBody QueryAvailableDronesRequest QueryAvailableDronesRequest) {
+        return droneService.queryAvailableDrones(QueryAvailableDronesRequest.getMedDispatchRecs());
     }
 
 }

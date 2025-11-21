@@ -3,14 +3,8 @@ package cw1.service;
 
 import cw1.exception.InvalidDataException;
 import cw1.exception.NotFoundException;
-import cw1.model.Drone;
-import cw1.model.DroneList;
-import cw1.model.Position;
-import cw1.model.Region;
-import cw1.util.DistanceTo;
-import cw1.util.IsCloseTo;
-import cw1.util.IsInRegion;
-import cw1.util.NextPosition;
+import cw1.model.*;
+import cw1.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -20,9 +14,11 @@ import java.util.List;
 public class DroneServiceImpl implements DroneService {
 
     private final DroneList droneList1;
+    private final ServicePointAvailabilityList servicePointAvailabilityList;
 
-    public DroneServiceImpl(DroneList droneList1) {
+    public DroneServiceImpl(DroneList droneList1, ServicePointAvailabilityList servicePointAvailabilityList) {
         this.droneList1 = droneList1;
+        this.servicePointAvailabilityList = servicePointAvailabilityList;
     }
 
     @Override
@@ -96,4 +92,19 @@ public class DroneServiceImpl implements DroneService {
                 }).map(Drone::getId).toList();
     }
 
+    @Override
+    public List<String> queryAvailableDrones(List<MedDispatchRec> medDispatchRecs) {
+        droneList1.setDrones();
+        servicePointAvailabilityList.setServicePointAvailabilities();
+        MedDispatchRec.validateMedDispatchRecs(medDispatchRecs);
+        return droneList1.getAllDrones().stream().filter(drone ->
+                        medDispatchRecs.stream()
+                                .allMatch(dispatchRec ->
+                                        (QueryAvailableDrones.droneMeetsRequirements(drone, dispatchRec)
+                                        && QueryAvailableDrones.droneIsAvailableForRec(drone, dispatchRec, servicePointAvailabilityList))
+                ))
+                .map(Drone::getId)
+                .toList();
+    }
 }
+
