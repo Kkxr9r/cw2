@@ -3,6 +3,7 @@ package cw1.controller;
 import cw1.dto.*;
 import cw1.model.Drone;
 import cw1.model.Position;
+import cw1.model.Request;
 import cw1.service.DroneService;
 
 import org.slf4j.Logger;
@@ -84,6 +85,11 @@ public class ServiceController {
     @GetMapping("/queryAsPath/{attributeName}/{attributeValue}")
     public List<String> queryAsPath(@PathVariable String attributeName, @PathVariable String attributeValue) {
         return droneService.queryAsPath(attributeName, attributeValue);
+    }
+
+    @PostMapping("/query")
+    public List<String> query(@RequestBody List<Request> requestList) {
+        return droneService.query(requestList);
     }
 
     @PostMapping("/queryAvailableDrones")

@@ -77,6 +77,7 @@ public class DroneServiceImpl implements DroneService {
         return droneList1.getAllDrones().stream().filter(drone -> {
                     return switch (attributeName) {
                         // added these as well just in case they wanted to do it the complicated way
+                        case "name" ->  drone.getName().equals(attributeValue);
                         case "id" -> drone.getId().equals(attributeValue);
                         case "cooling" -> Boolean.toString(drone.getCapability().isCooling()).equals(attributeValue);
                         case "heating" -> Boolean.toString(drone.getCapability().isHeating()).equals(attributeValue);
@@ -90,6 +91,18 @@ public class DroneServiceImpl implements DroneService {
                         default -> false;
                     };
                 }).map(Drone::getId).toList();
+    }
+
+    @Override
+    public List<String> query(List<Request> requestList) {
+        Request.validateRequestList(requestList);
+        droneList1.setDrones();
+        return droneList1.getAllDrones().stream().filter(drone ->
+                requestList.stream().allMatch(
+                        request -> Query.droneHasCapability(request, drone)
+                ))
+                .map(Drone::getId)
+                .toList();
     }
 
     @Override
