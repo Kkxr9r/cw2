@@ -1,5 +1,7 @@
 package cw1.client;
 import cw1.model.Drone;
+import cw1.model.DroneServicePoint;
+import cw1.model.RestrictedRegion;
 import cw1.model.ServicePointAvailability;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -32,4 +34,15 @@ public class IlpClient {
     }
 
 
+    public List<DroneServicePoint> fetchDroneServicePoint() {
+        String url = ilpBaseUrl + "/service-points";
+        DroneServicePoint[] servicePoints = restTemplate.getForObject(url, DroneServicePoint[].class);
+        return servicePoints == null ? List.of() : Arrays.asList(servicePoints);
+    }
+
+    public List<RestrictedRegion> fetchRestrictedRegions() {
+        String url = ilpBaseUrl + "/restricted-areas";
+        RestrictedRegion[] regions = restTemplate.getForObject(url, RestrictedRegion[].class);
+        return regions == null ? List.of() : Arrays.asList(regions);
+    }
 }

@@ -13,10 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 public class MedDispatchRec {
 
-    private int id;
+    private Integer id;
     private LocalDate date;
     private LocalTime time;
     private Requirements requirements;
+    private Position delivery;
 
 
     public static void validateMedDispatchRecs(List<MedDispatchRec> medDispatchRecs) throws InvalidDataException {
@@ -33,12 +34,19 @@ public class MedDispatchRec {
             throw new InvalidDataException("MedDispatchRec is cannot be null");
         }
 
+        if (medDispatchRec.getId() == null){
+            throw new InvalidDataException("MedDispatchRec id cannot be null");
+        }
+        if (medDispatchRec.getDelivery() == null){
+            throw new InvalidDataException("MedDispatchRec delivery cannot be null");
+        }
+
         Requirements requirements = medDispatchRec.getRequirements();
         if (requirements == null){
             throw new InvalidDataException("requirements cannot be null");
         }
         if (requirements.getCapacity() == null){
-            throw new InvalidDataException("capacity is cannot be null");
+            throw new InvalidDataException("capacity cannot be null");
         }
         if (requirements.getCapacity() < 0){
             throw new InvalidDataException("capacity cannot be negative");

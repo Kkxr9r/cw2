@@ -2,6 +2,7 @@ package cw1.controller;
 
 import cw1.dto.*;
 import cw1.model.Drone;
+import cw1.model.DroneDeliveryPath;
 import cw1.model.Position;
 import cw1.model.Request;
 import cw1.service.DroneService;
@@ -95,6 +96,16 @@ public class ServiceController {
     @PostMapping("/queryAvailableDrones")
     public List<String> queryAvailableDrones(@RequestBody QueryAvailableDronesRequest QueryAvailableDronesRequest) {
         return droneService.queryAvailableDrones(QueryAvailableDronesRequest.getMedDispatchRecs());
+    }
+
+    @PostMapping("/calcDeliveryPath")
+    public DroneDeliveryPath calcDeliveryPath(@RequestBody CalcDeliveryPathRequest CalcDeliveryPathRequest) {
+        return droneService.calcDeliveryPath(CalcDeliveryPathRequest.getMedDispatchRecs());
+    }
+
+    @PostMapping("/calcDeliveryPathAsGeoJson")
+    public String calcDeliveryPathAsGeoJson(@RequestBody CalcDeliveryPathRequest CalcDeliveryPathRequest) {
+        return droneService.calcDeliveryPathAsGeoJson(CalcDeliveryPathRequest.getMedDispatchRecs());
     }
 
 }

@@ -8,7 +8,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ServicePointAvailability {
-
-        private int servicePointId;
+        private Integer servicePointId;
         private List<AvailableDrone> drones;
 }

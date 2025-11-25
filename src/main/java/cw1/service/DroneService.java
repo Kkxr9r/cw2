@@ -16,4 +16,6 @@ public interface DroneService {
     List<String> queryAsPath(String attributeName, String attributeValue);
     List<String> query(List<Request> requestList);
     List<String> queryAvailableDrones(List<MedDispatchRec> medDispatchRecs);
+    DroneDeliveryPath calcDeliveryPath(List<MedDispatchRec> medDispatchRecs);
+    String calcDeliveryPathAsGeoJson(List<MedDispatchRec> medDispatchRecs);
 }

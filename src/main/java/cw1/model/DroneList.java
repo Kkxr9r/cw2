@@ -3,7 +3,7 @@ package cw1.model;
 
 import cw1.client.IlpClient;
 import jakarta.annotation.PostConstruct;
-import lombok.Data;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
