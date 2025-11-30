@@ -1,10 +1,10 @@
 package cw1.controller;
 
-import cw1.dto.DistanceToRequest;
-import cw1.dto.IsCloseToRequest;
-import cw1.dto.IsInRegionRequest;
-import cw1.dto.NextPositionRequest;
+import cw1.dto.*;
+import cw1.model.Drone;
+import cw1.model.DroneDeliveryPath;
 import cw1.model.Position;
+import cw1.model.Request;
 import cw1.service.DroneService;
 
 import org.slf4j.Logger;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
+import java.util.List;
 
 /**
  * Controller class that handles various HTTP endpoints for the application.
@@ -69,4 +70,42 @@ public class ServiceController {
     public boolean isInRegion(@RequestBody IsInRegionRequest isInRegionRequest) {
         return droneService.isInRegion(isInRegionRequest.getPosition(), isInRegionRequest.getRegion());
     }
+
+    // cw 2
+
+    @GetMapping("/dronesWithCooling/{state}")
+    public List<String> dronesWithCooling(@PathVariable boolean state) {
+        return droneService.dronesWithCooling(state);
+    }
+
+    @GetMapping("/droneDetails/{id}")
+    public Drone droneDetails(@PathVariable String id) {
+        return droneService.getDrone(id);
+    }
+
+    @GetMapping("/queryAsPath/{attributeName}/{attributeValue}")
+    public List<String> queryAsPath(@PathVariable String attributeName, @PathVariable String attributeValue) {
+        return droneService.queryAsPath(attributeName, attributeValue);
+    }
+
+    @PostMapping("/query")
+    public List<String> query(@RequestBody List<Request> requestList) {
+        return droneService.query(requestList);
+    }
+
+    @PostMapping("/queryAvailableDrones")
+    public List<String> queryAvailableDrones(@RequestBody QueryAvailableDronesRequest QueryAvailableDronesRequest) {
+        return droneService.queryAvailableDrones(QueryAvailableDronesRequest.getMedDispatchRecs());
+    }
+
+    @PostMapping("/calcDeliveryPath")
+    public DroneDeliveryPath calcDeliveryPath(@RequestBody CalcDeliveryPathRequest CalcDeliveryPathRequest) {
+        return droneService.calcDeliveryPath(CalcDeliveryPathRequest.getMedDispatchRecs());
+    }
+
+    @PostMapping("/calcDeliveryPathAsGeoJson")
+    public String calcDeliveryPathAsGeoJson(@RequestBody CalcDeliveryPathRequest CalcDeliveryPathRequest) {
+        return droneService.calcDeliveryPathAsGeoJson(CalcDeliveryPathRequest.getMedDispatchRecs());
+    }
+
 }

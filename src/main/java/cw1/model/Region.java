@@ -1,20 +1,18 @@
 package cw1.model;
 
 import cw1.exception.InvalidDataException;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class Region {
     private String name;
     private List<Position> vertices = new ArrayList<>();
-
-    public Region() {}
 
     public Region(String name, List<Position> vertices) {
         this.name = name;

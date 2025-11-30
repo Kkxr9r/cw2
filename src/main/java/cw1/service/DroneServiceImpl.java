@@ -2,16 +2,31 @@ package cw1.service;
 
 
 import cw1.exception.InvalidDataException;
-import cw1.model.Position;
-import cw1.model.Region;
-import cw1.util.DistanceTo;
-import cw1.util.IsCloseTo;
-import cw1.util.IsInRegion;
-import cw1.util.NextPosition;
+import cw1.exception.NotFoundException;
+import cw1.model.*;
+import cw1.util.*;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static cw1.util.CalcDeliveryPath.singleTrip;
 
 @Service
 public class DroneServiceImpl implements DroneService {
+
+    private final DroneList droneList1;
+    private final ServicePointAvailabilityList servicePointAvailabilityList;
+    private final ServicePointList servicePointList1;
+    private final RestrictedRegionList restrictedRegionList1;
+
+    public DroneServiceImpl(DroneList droneList1, ServicePointAvailabilityList servicePointAvailabilityList, ServicePointList servicePointList1, RestrictedRegionList restrictedRegionList1) {
+        this.droneList1 = droneList1;
+        this.servicePointAvailabilityList = servicePointAvailabilityList;
+        this.servicePointList1 = servicePointList1;
+        this.restrictedRegionList1 = restrictedRegionList1;
+    }
 
     @Override
     public double calculateDistance(Position p1, Position p2) {
@@ -42,4 +57,134 @@ public class DroneServiceImpl implements DroneService {
         Region.validateRegion(region);
         return IsInRegion.isInRegion(point, region);
     }
+
+    @Override
+    public List<String> dronesWithCooling(boolean state) {
+        droneList1.setDrones();
+        return droneList1.getAllDrones().stream()
+                .filter(drone -> state
+                        ? drone.getCapability().isCooling()
+                        : drone.getCapability().isHeating()
+                )
+                .map(Drone::getId)
+                .toList();
+    }
+
+    @Override
+    public Drone getDrone (String id) {
+        droneList1.setDrones();
+        return droneList1.getAllDrones().stream()
+                .filter(drone -> id.equals(drone.getId())).findFirst()
+                .orElseThrow(() -> new NotFoundException("drone with id " + id + " not found"));
+    }
+
+    @Override
+    public List<String> queryAsPath(String attributeName, String attributeValue) {
+        droneList1.setDrones();
+        return droneList1.getAllDrones().stream().filter(drone -> {
+                    return switch (attributeName) {
+                        // added these as well just in case they wanted to do it the complicated way
+                        case "name" ->  drone.getName().equals(attributeValue);
+                        case "id" -> drone.getId().equals(attributeValue);
+                        case "cooling" -> Boolean.toString(drone.getCapability().isCooling()).equals(attributeValue);
+                        case "heating" -> Boolean.toString(drone.getCapability().isHeating()).equals(attributeValue);
+
+                        case "capacity" -> Double.toString(drone.getCapability().getCapacity()).equals(attributeValue);
+                        case "maxMoves" -> Integer.toString(drone.getCapability().getMaxMoves()).equals(attributeValue);
+                        case "costPerMove" ->  Double.toString(drone.getCapability().getCostPerMove()).equals(attributeValue);
+                        case "costInitial" -> Double.toString(drone.getCapability().getCostInitial()).equals(attributeValue);
+                        case "costFinal" -> Double.toString(drone.getCapability().getCostFinal()).equals(attributeValue);
+
+                        default -> false;
+                    };
+                }).map(Drone::getId).toList();
+    }
+
+    @Override
+    public List<String> query(List<Request> requestList) {
+        Request.validateRequestList(requestList);
+        droneList1.setDrones();
+        return droneList1.getAllDrones().stream().filter(drone ->
+                requestList.stream().allMatch(
+                        request -> Query.droneHasCapability(request, drone)
+                ))
+                .map(Drone::getId)
+                .toList();
+    }
+
+    @Override
+    public List<String> queryAvailableDrones(List<MedDispatchRec> medDispatchRecs) {
+        droneList1.setDrones();
+        servicePointAvailabilityList.setServicePointAvailabilities();
+        MedDispatchRec.validateMedDispatchRecs(medDispatchRecs);
+        return droneList1.getAllDrones().stream().filter(drone ->
+                        medDispatchRecs.stream()
+                                .allMatch(dispatchRec ->
+                                        (QueryAvailableDrones.droneMeetsRequirements(drone, dispatchRec)
+                                        && QueryAvailableDrones.droneIsAvailableForRec(drone, dispatchRec, servicePointAvailabilityList))
+                ))
+                .map(Drone::getId)
+                .toList();
+    }
+
+    @Override
+    public DroneDeliveryPath calcDeliveryPath(List<MedDispatchRec> medDispatchRecs){
+        droneList1.setDrones();
+        servicePointAvailabilityList.setServicePointAvailabilities();
+        servicePointList1.setServicePoints();
+        restrictedRegionList1.setRestrictedRegionList();
+        MedDispatchRec.validateMedDispatchRecs(medDispatchRecs);
+        RestrictedRegion.validateRestrictedRegionList(restrictedRegionList1);
+        List<String> availableDrones = queryAvailableDrones(medDispatchRecs);
+
+        if (availableDrones.isEmpty()) {
+            return new DroneDeliveryPath(0.0, 0, new ArrayList<>());
+        }
+
+        List<Drone> drones = droneList1.getAllDrones().stream().filter(
+                d -> availableDrones.contains(d.getId())).toList();
+
+        DroneDeliveryPath oneTrip =
+                servicePointList1.getServicePointList().stream()
+                        .flatMap(sp ->
+                                drones.stream()
+                                        .map(drone -> singleTrip(sp, drone, medDispatchRecs, restrictedRegionList1))
+                        )
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .orElse(null);
+
+        if (oneTrip != null) return oneTrip;
+
+        DroneDeliveryPath multiTrip =
+                servicePointList1.getServicePointList().stream()
+                        .flatMap(sp -> drones.stream()
+                                .map(drone -> CalcDeliveryPath.multiTrip(sp, drone, medDispatchRecs, restrictedRegionList1)))
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                .orElse(null);
+
+        if (multiTrip != null) return multiTrip;
+        return DroneDeliveryPath.empty();
+    }
+
+    @Override
+    public String calcDeliveryPathAsGeoJson(List<MedDispatchRec> medDispatchRecs) {
+        DroneDeliveryPath plan = calcDeliveryPath(medDispatchRecs);
+
+        if (plan == null || plan.getDronePaths() == null || plan.getDronePaths().isEmpty()) {
+            return """
+               {
+                 "type": "FeatureCollection",
+                 "features": []
+               }
+               """;
+        }
+
+        return plan.toGeoJson();
+    }
+
+
+
 }
+

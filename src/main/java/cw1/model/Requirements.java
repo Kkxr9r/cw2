@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Requirements {
-    private double capacity;
+    private Double capacity;
     private boolean cooling = false;
     private boolean heating = false;
     private Double maxCost = null;
